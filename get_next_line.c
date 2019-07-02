@@ -10,3 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
+int get_next_line(const int fd, char **line)
+{
+	char 		*buff[BUFF_SIZE + 1]
+	static char	*str;
+	char 		*temp;
+   
+	if (fd < 1 || !line)
+		return (-1);
+	while (read(fd, buff, BUFF_SIZE) != 0)
+	{
+		if (str == NULL)
+			str = buff;
+		else 
+			temp = strjoin(str, buff)
+			str = temp;
+	}
+
+
+}
