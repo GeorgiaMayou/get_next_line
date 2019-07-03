@@ -12,22 +12,38 @@
 
 #include "get_next_line.h"
 
+int	ft_nlbuff(char *buff, char **line)
+{
+	int		len;
+	char	*newl;
+
+	if (buff = 0)
+		return (0);
+	newl = ft_strchr(buff, '\n');
+	if ((len = newl - buff) > 0)
+	{
+		copy for len from buf -> line
+		return (1);
+	}
+	else 
+	{
+		copy ggot length of buff from buff -> line
+		return (0);
+	}
+}
+
 int get_next_line(const int fd, char **line)
 {
-	char 		*buff[BUFF_SIZE + 1]
-	static char	*str;
-	char 		*temp;
-   
+	static char	*buff;
+	int			n;
+
 	if (fd < 1 || !line)
 		return (-1);
-	while (read(fd, buff, BUFF_SIZE) != 0)
+	if (!buff)
+		buff = ft_strnew(BUFF_SIZE);
+	while ((n = read(fd, buff, BUFF_SIZE)) > 0)
 	{
-		if (str == NULL)
-			str = buff;
-		else 
-			temp = strjoin(str, buff)
-			str = temp;
+		if (ft_nlbuff(buff, line) == 1)
+			return (1);
 	}
-
-
 }
