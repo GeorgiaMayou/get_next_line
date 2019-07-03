@@ -12,9 +12,25 @@
 
 #include "get_next_line.h"
 
-int	ft_nlbuff(char *buff, char **line)
+static char	*ft_buffmv(char *buff, char **line, size_t len)\
 {
-	int		len;
+	char *new;
+	char *temp;
+
+	if (len == 0)
+		return(line);
+	else
+		temp = ft_strnew(len);
+		temp = ft_strncpy(temp, buff, len);
+	new = ft_strcat(line, temp);
+	free(temp);
+	free(line);
+	return (new);
+}
+
+static int	ft_nlbuff(char *buff, char **line)
+{
+	size_t	len;
 	char	*newl;
 
 	if (buff = 0)
@@ -22,17 +38,17 @@ int	ft_nlbuff(char *buff, char **line)
 	newl = ft_strchr(buff, '\n');
 	if ((len = newl - buff) > 0)
 	{
-		copy for len from buf -> line
+		*line = ft_buffmv(buff, line, len);
 		return (1);
 	}
 	else 
 	{
-		copy ggot length of buff from buff -> line
+		*line = ft_buffmv(buff, line, BUFF_SIZE)
 		return (0);
 	}
 }
 
-int get_next_line(const int fd, char **line)
+int 		get_next_line(const int fd, char **line)
 {
 	static char	*buff;
 	int			n;
