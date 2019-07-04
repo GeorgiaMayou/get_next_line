@@ -15,16 +15,13 @@
 static char	*ft_buffmv(char *buff, char **line, size_t len)\
 {
 	char *new;
-	char *temp;
 
-	if (len == 0)
-		return(line);
-	else
-		temp = ft_strnew(len);
-		temp = ft_strncpy(temp, buff, len);
-	new = ft_strcat(line, temp);
-	free(temp);
-	free(line);
+	if (*line == 0)
+		return(ft_strdup(buff));
+	new = ft_strnew(ft_strlen(*line) + len);
+	ft_strcpy(new, *line);
+	ft_strncat(new, buff, len);
+	free(*line);
 	return (new);
 }
 
@@ -33,7 +30,7 @@ static int	ft_nlbuff(char *buff, char **line)
 	size_t	len;
 	char	*newl;
 
-	if (buff = 0)
+	if (buff[0] == 0)
 		return (0);
 	newl = ft_strchr(buff, '\n');
 	if ((len = newl - buff) > 0)
@@ -43,7 +40,7 @@ static int	ft_nlbuff(char *buff, char **line)
 	}
 	else 
 	{
-		*line = ft_buffmv(buff, line, BUFF_SIZE)
+		*line = ft_buffmv(buff, line, BUFF_SIZE);
 		return (0);
 	}
 }
@@ -53,13 +50,17 @@ int 		get_next_line(const int fd, char **line)
 	static char	*buff;
 	int			n;
 
-	if (fd < 1 || !line)
+	if (fd < 0 || !line)
 		return (-1);
 	if (!buff)
 		buff = ft_strnew(BUFF_SIZE);
+	*line = 0;
 	while ((n = read(fd, buff, BUFF_SIZE)) > 0)
 	{
 		if (ft_nlbuff(buff, line) == 1)
 			return (1);
 	}
+	return (-1);
 }
+
+
