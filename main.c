@@ -1,47 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gmayou <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/07/05 10:40:18 by gmayou            #+#    #+#             */
+/*   Updated: 2019/07/05 10:40:24 by gmayou           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
 #include <fcntl.h>
 
-//int		main(int argc, char **argv)
-/* {
-	int		fd;
-	char	**line;
-	int		gnlret;
-	int		linecount;
-
-	linecount = 0;
-	gnlret = 1;
-	fd = 0;
-	printf("Argc: %d\n", argc);
-	printf("File to open: %s\n", argv[1]);
-	line = ft_memalloc(sizeof(char **));
-	printf("BUFF_SIZE: %d\n\n\n", BUFF_SIZE);
-	while ((gnlret = get_next_line(fd, line)) > 0)
-	{
-		printf("%s\n", *line);
-		linecount++;
-	}
-	printf("Line count: %d\n", linecount);
-	printf("Finished\n\n");
-	close(fd);
-	while(1); 
-	return (0);
-} */
-
-int main ()
+int		main(int argc, char **argv)
 {
-    char *line;
-    int i;
+	int		fd;
+	char	*line;
 
-    while ((i = get_next_line(0, &line)) == 1)
-    {
-        printf("%s", line);
-        printf("%d", i);
-        free(line);
-    }
-   
-    return (0);
+	if (argc == 1)
+		fd = 0;
+	else if (argc == 2)
+		fd = open(argv[1], O_RDONLY);
+	else
+		return (2);
+	while (get_next_line(fd, &line) == 1)
+	{
+		ft_putendl(line);
+		free(line);
+	}
+	if (argc == 2)
+		close(fd);
 }

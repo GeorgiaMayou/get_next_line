@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 static char	*ft_buffmv(char *buff, char **line, size_t len)\
 {
@@ -19,6 +20,7 @@ static char	*ft_buffmv(char *buff, char **line, size_t len)\
 	if (*line == 0)
 		return(ft_strdup(buff));
 	new = ft_strnew(ft_strlen(*line) + len);
+	printf("%s||buffmv ", *line);
 	ft_strcpy(new, *line);
 	ft_strncat(new, buff, len);
 	free(*line);
@@ -35,12 +37,16 @@ static int	ft_nlbuff(char *buff, char **line)
 	newl = ft_strchr(buff, '\n');
 	if ((len = newl - buff) > 0)
 	{
+		printf("%s||nlbuff ", *line);
 		*line = ft_buffmv(buff, line, len);
+		//reset buff
 		return (1);
 	}
 	else 
 	{
+		printf("%s||nlbuff2 ", *line);
 		*line = ft_buffmv(buff, line, BUFF_SIZE);
+		//reset buff
 		return (0);
 	}
 }
@@ -54,7 +60,7 @@ int 		get_next_line(const int fd, char **line)
 		return (-1);
 	if (!buff)
 		buff = ft_strnew(BUFF_SIZE);
-	*line = 0;
+	printf("%s||gnl ", *line);
 	while ((n = read(fd, buff, BUFF_SIZE)) > 0)
 	{
 		if (ft_nlbuff(buff, line) == 1)
@@ -62,5 +68,3 @@ int 		get_next_line(const int fd, char **line)
 	}
 	return (-1);
 }
-
-
