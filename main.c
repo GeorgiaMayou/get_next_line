@@ -25,7 +25,8 @@ int		main(int argc, char **argv)
 		fd = open(argv[1], O_RDONLY);
 	else
 		return (2);
-	while (get_next_line(fd, &line) == 1)
+	line = malloc(10000);
+	while ((get_next_line(fd, &line) > 0))
 	{
 		ft_putendl(line);
 		free(line);

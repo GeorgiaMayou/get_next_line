@@ -19,52 +19,54 @@ static char	*ft_buffmv(char *buff, char **line, size_t len)\
 
 	if (*line == 0)
 		return(ft_strdup(buff));
-	new = ft_strnew(ft_strlen(*line) + len);
+	new = ft_strnew(ft_strlen(*line) + len + 1);
 	printf("%s||buffmv ", *line);
-	ft_strcpy(new, *line);
+	new = ft_strdup(*line);
 	ft_strncat(new, buff, len);
 	free(*line);
 	return (new);
 }
 
-static int	ft_nlbuff(char *buff, char **line)
+static int	ft_nlbuff(char **holder, char *buff, char **line)
 {
 	size_t	len;
 	char	*newl;
+	char 	*news;
 
 	if (buff[0] == 0)
 		return (0);
 	newl = ft_strchr(buff, '\n');
+	*holder = buff;
 	if ((len = newl - buff) > 0)
 	{
-		printf("%s||nlbuff ", *line);
 		*line = ft_buffmv(buff, line, len);
-		//reset buff
+		news = buff + len + 1;
+		*holder = ft_strdup(news);
 		return (1);
 	}
 	else 
 	{
-		printf("%s||nlbuff2 ", *line);
 		*line = ft_buffmv(buff, line, BUFF_SIZE);
-		//reset buff
+		ft_strclr(buff);
 		return (0);
 	}
 }
 
 int 		get_next_line(const int fd, char **line)
 {
-	static char	*buff;
+	char 		buff[BUFF_SIZE + 1];
+	static char *mybuff;
 	int			n;
 
+	if (!mybuff)
+		mybuff = ft_strnew(0);
 	if (fd < 0 || !line)
 		return (-1);
-	if (!buff)
-		buff = ft_strnew(BUFF_SIZE);
-	printf("%s||gnl ", *line);
 	while ((n = read(fd, buff, BUFF_SIZE)) > 0)
 	{
-		if (ft_nlbuff(buff, line) == 1)
+		if (ft_nlbuff(&mybuff, buff, line) == 1)
 			return (1);
 	}
-	return (-1);
+	return (0);
 }
+		
