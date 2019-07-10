@@ -13,41 +13,24 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
-static char	*ft_buffmv(char *buff, char **line, size_t len)\
-{
-	char *new;
-
-	if (*line == 0)
-		return(ft_strdup(buff));
-	new = ft_strnew(ft_strlen(*line) + len + 1);
-	printf("%s||buffmv ", *line);
-	new = ft_strdup(*line);
-	ft_strncat(new, buff, len);
-	free(*line);
-	return (new);
-}
 
 static int	ft_nlbuff(char **holder, char *buff, char **line)
 {
-	size_t	len;
 	char	*newl;
-	char 	*news;
 
-	if (buff[0] == 0)
+	if (buff[0] == '\0')
 		return (0);
-	newl = ft_strchr(buff, '\n');
-	*holder = buff;
-	if ((len = newl - buff) > 0)
+	*holder = ft_strjoin(*holder, buff);
+	newl = ft_strchr(*holder, '\n');
+	if (newl)
 	{
-		*line = ft_buffmv(buff, line, len);
-		news = buff + len + 1;
-		*holder = ft_strdup(news);
+		*line = ft_strdup(*holder);
+		*holder = strdup(newl + 1);
 		return (1);
 	}
 	else 
 	{
-		*line = ft_buffmv(buff, line, BUFF_SIZE);
-		ft_strclr(buff);
+		*line = strdup(*holder);
 		return (0);
 	}
 }
