@@ -24,8 +24,9 @@ static int	ft_nlbuff(char **holder, char *buff, char **line)
 	newl = ft_strchr(*holder, '\n');
 	if (newl)
 	{
+		newl[0] = '\0';
 		*line = ft_strdup(*holder);
-		*holder = strdup(newl + 1);
+		*holder = ft_strdup(newl + 1);
 		return (1);
 	}
 	else 
@@ -45,15 +46,17 @@ int 		get_next_line(const int fd, char **line)
 		stat = ft_strnew(0);
 	if (fd < 0 || !line)
 		return (-1);
+	ft_bzero(buff, BUFF_SIZE + 1);
 	while ((n = read(fd, buff, BUFF_SIZE)) > 0)
 	{
 		if (n < BUFF_SIZE)
 		{
-			*line = ft_strjoin(*line, buff);
+			*line = ft_strjoin(stat, buff);
 			return (1);
 		}
 		if (ft_nlbuff(&stat, buff, line) == 1)
 			return (1);
+		ft_bzero(buff, BUFF_SIZE);
 	}
 	return (0);
 }
