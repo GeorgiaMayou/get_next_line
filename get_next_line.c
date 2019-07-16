@@ -20,7 +20,12 @@ static int	ft_nlbuff(char **holder, char *buff, char **line)
 
 	if (buff[0] == '\0')
 		return (0);
-	*holder = ft_strjoin(*holder, buff);
+	char *temp;
+	
+	temp = ft_strdup(*holder);
+	free(*holder);
+	*holder = ft_strjoin(temp, buff);
+	free(temp);
 	newl = ft_strchr(*holder, '\n');
 	if (newl)
 	{
@@ -31,9 +36,10 @@ static int	ft_nlbuff(char **holder, char *buff, char **line)
 	}
 	else 
 	{
-		*line = strdup(*holder);
+		*line = ft_strdup(*holder);
 		return (0);
 	}
+	free (newl);
 }
 
 int 		get_next_line(const int fd, char **line)
@@ -43,7 +49,9 @@ int 		get_next_line(const int fd, char **line)
 	int			n;
 
 	if (!stat)
+	{
 		stat = ft_strnew(0);
+	}
 	if (fd < 0 || !line)
 		return (-1);
 	ft_bzero(buff, BUFF_SIZE + 1);
@@ -51,12 +59,13 @@ int 		get_next_line(const int fd, char **line)
 	{
 		if (n < BUFF_SIZE)
 		{
+			free (*line);
 			*line = ft_strjoin(stat, buff);
 			return (1);
 		}
 		if (ft_nlbuff(&stat, buff, line) == 1)
 			return (1);
-		ft_bzero(buff, BUFF_SIZE);
+		free (buff);
 	}
 	return (0);
 }

@@ -23,5 +23,6 @@ char	*ft_strdup(const char *str)
 	{
 		ft_strcpy(new, str);
 	}
+	free ((char *)str);
 	return (new);
 }
