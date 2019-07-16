@@ -13,18 +13,17 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
-
 static int	ft_nlbuff(char **holder, char *buff, char **line)
 {
 	char	*newl;
+	char	*temp;
 
 	if (buff[0] == '\0')
 		return (0);
-	char *temp;
-	
 	temp = ft_strdup(*holder);
 	free(*holder);
-	*holder = ft_strjoin(temp, buff);
+	if (temp && buff)
+		*holder = ft_strjoin(temp, buff);
 	free(temp);
 	newl = ft_strchr(*holder, '\n');
 	if (newl)
@@ -34,17 +33,17 @@ static int	ft_nlbuff(char **holder, char *buff, char **line)
 		*holder = ft_strdup(newl + 1);
 		return (1);
 	}
-	else 
+	else
 	{
 		*line = ft_strdup(*holder);
 		return (0);
 	}
-	free (newl);
+	free(newl);
 }
 
-int 		get_next_line(const int fd, char **line)
+int			get_next_line(const int fd, char **line)
 {
-	char 		buff[BUFF_SIZE + 1];
+	char		buff[BUFF_SIZE + 1];
 	static char *stat;
 	int			n;
 
@@ -59,14 +58,14 @@ int 		get_next_line(const int fd, char **line)
 	{
 		if (n < BUFF_SIZE)
 		{
-			free (*line);
-			*line = ft_strjoin(stat, buff);
+			ft_nlbuff(&stat, buff, line);
+			// free(*line);
+			// *line = ft_strjoin(stat, buff);
 			return (1);
 		}
 		if (ft_nlbuff(&stat, buff, line) == 1)
 			return (1);
-		free (buff);
+		free(buff);
 	}
 	return (0);
 }
-		
