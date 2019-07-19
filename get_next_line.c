@@ -11,61 +11,64 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-static int	ft_nlbuff(char **holder, char *buff, char **line)
+int ft_linemvr(char **line, char **stat)
 {
-	char	*newl;
+	int		i;
 	char	*temp;
 
-	if (buff[0] == '\0')
-		return (0);
-	temp = ft_strdup(*holder);
-	free(*holder);
-	if (temp && buff)
-		*holder = ft_strjoin(temp, buff);
-	free(temp);
-	newl = ft_strchr(*holder, '\n');
-	if (newl)
+	i = 0;
+	while (stat[i] != '\n' || stat[i] != '\0')
+		i++;
+	if (stat[i] == '\n')
 	{
-		newl[0] = '\0';
-		*line = ft_strdup(*holder);
-		*holder = ft_strdup(newl + 1);
-		return (1);
+		line = ft_strsub(stat, 0, i);
+		temp = ft_strdup(stat[i + 1]);
+		free (stat);
+		stat = temp;
 	}
-	else
-	{
-		*line = ft_strdup(*holder);
-		return (0);
-	}
-	free(newl);
+	else 
+		*line = ft_strdup(stat);
+		return(1);
 }
 
-int			get_next_line(const int fd, char **line)
+int	ft_retvals(char **stat, int n, char **line, int fd)
 {
-	char		buff[BUFF_SIZE + 1];
-	static char *stat;
-	int			n;
+	char *newstat;
 
-	if (!stat)
+	newstat = stat[fd];
+	if (n < 0 || !line)
+		return (-1);
+	else if (n == 0 && !newstat)
 	{
-		stat = ft_strnew(0);
+		return(0);
 	}
+	else
+		return (ft_linemvr(line, &newstat));
+}
+
+int	get_next_line(const int fd, char **line)
+{
+	int 		n;
+	char		*buff[BUFF_SIZE + 1];
+	static char	*stat[100];
+	char		*temp;
+
 	if (fd < 0 || !line)
 		return (-1);
-	ft_bzero(buff, BUFF_SIZE + 1);
-	while ((n = read(fd, buff, BUFF_SIZE)) > 0)
+	while((n = read(fd, buff, BUFF_SIZE)) > 0)
 	{
-		if (n < BUFF_SIZE)
+		buff[n] = '\0';
+		if (!stat[fd])
+			stat[fd] = ft_strdup(buff);
+		else 
 		{
-			ft_nlbuff(&stat, buff, line);
-			// free(*line);
-			// *line = ft_strjoin(stat, buff);
-			return (1);
+			temp = ft_strjoin(stat[fd], (const char)buff);
+			free(stat[fd]);
+			stat[fd] = temp;
 		}
-		if (ft_nlbuff(&stat, buff, line) == 1)
-			return (1);
-		free(buff);
+		if (ft_strchr(buff, '\n'))
+			break;
 	}
-	return (0);
+	return (ft_retvals(stat, n, line, fd));
 }
