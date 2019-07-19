@@ -16,42 +16,39 @@ int ft_linemvr(char **line, char **stat)
 {
 	int		i;
 	char	*temp;
-
+	
 	i = 0;
-	while (stat[i] != '\n' || stat[i] != '\0')
+	while ((*stat)[i] != '\n' || (*stat)[i] != '\0')
 		i++;
-	if (stat[i] == '\n')
+	if ((*stat)[i] == '\n')
 	{
-		line = ft_strsub(stat, 0, i);
-		temp = ft_strdup(stat[i + 1]);
-		free (stat);
-		stat = temp;
+		*line = ft_strsub(*stat, 0, i);
+		temp = ft_strdup(&((*stat)[i + 1]));
+		free (*stat);
+		*stat = temp;
 	}
 	else 
-		*line = ft_strdup(stat);
+		*line = ft_strdup(*stat);
 		return(1);
 }
 
 int	ft_retvals(char **stat, int n, char **line, int fd)
 {
-	char *newstat;
-
-	newstat = stat[fd];
 	if (n < 0 || !line)
 		return (-1);
-	else if (n == 0 && !newstat)
+	else if (n == 0 && !stat[fd])
 	{
 		return(0);
 	}
 	else
-		return (ft_linemvr(line, &newstat));
+		return (ft_linemvr(line, &stat[fd]));
 }
 
 int	get_next_line(const int fd, char **line)
 {
 	int 		n;
-	char		*buff[BUFF_SIZE + 1];
-	static char	*stat[100];
+	char		buff[BUFF_SIZE + 1];
+	static char	*stat[50];
 	char		*temp;
 
 	if (fd < 0 || !line)
@@ -63,7 +60,7 @@ int	get_next_line(const int fd, char **line)
 			stat[fd] = ft_strdup(buff);
 		else 
 		{
-			temp = ft_strjoin(stat[fd], (const char)buff);
+			temp = ft_strjoin(stat[fd], buff);
 			free(stat[fd]);
 			stat[fd] = temp;
 		}
