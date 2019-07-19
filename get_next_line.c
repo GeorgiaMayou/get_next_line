@@ -18,7 +18,7 @@ int ft_linemvr(char **line, char **stat)
 	char	*temp;
 	
 	i = 0;
-	while ((*stat)[i] != '\n' || (*stat)[i] != '\0')
+	while ((*stat)[i] != '\n' && (*stat)[i] != '\0')
 		i++;
 	if ((*stat)[i] == '\n')
 	{
@@ -26,9 +26,14 @@ int ft_linemvr(char **line, char **stat)
 		temp = ft_strdup(&((*stat)[i + 1]));
 		free (*stat);
 		*stat = temp;
+		if ((*stat)[0] == '\0')
+			ft_strclr(*stat);
 	}
 	else 
+	{
 		*line = ft_strdup(*stat);
+		ft_strclr(*stat);
+	}
 		return(1);
 }
 
