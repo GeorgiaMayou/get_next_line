@@ -12,11 +12,11 @@
 
 #include "get_next_line.h"
 
-int ft_linemvr(char **line, char **stat)
+int	ft_linemvr(char **line, char **stat)
 {
 	int		i;
 	char	*temp;
-	
+
 	i = 0;
 	while ((*stat)[i] != '\n' && (*stat)[i] != '\0')
 		i++;
@@ -26,22 +26,24 @@ int ft_linemvr(char **line, char **stat)
 		temp = ft_strdup(&((*stat)[i + 1]));
 		free(*stat);
 		*stat = temp;
+		if ((*stat)[0] == '\0')
+			ft_strdel(stat);
 	}
-	else 
+	else
 	{
 		*line = ft_strdup(*stat);
-		free(*stat);
+		ft_strdel(stat);
 	}
-		return(1);
+	return (1);
 }
 
 int	ft_retvals(char **stat, int n, char **line, int fd)
 {
 	if (n < 0 || !line)
 		return (-1);
-	else if ((n == 0 && !stat[fd]) || (stat[fd][0] == '\0')) 
+	else if ((n == 0 && !stat[fd]) || (stat[fd][0] == '\0'))
 	{
-		return(0);
+		return (0);
 	}
 	else
 		return (ft_linemvr(line, &stat[fd]));
@@ -49,26 +51,26 @@ int	ft_retvals(char **stat, int n, char **line, int fd)
 
 int	get_next_line(const int fd, char **line)
 {
-	int 		n;
+	int			n;
 	char		buff[BUFF_SIZE + 1];
 	static char	*stat[50];
 	char		*temp;
 
 	if (fd < 0 || !line)
 		return (-1);
-	while((n = read(fd, buff, BUFF_SIZE)) > 0)
+	while ((n = read(fd, buff, BUFF_SIZE)) > 0)
 	{
 		buff[n] = '\0';
 		if (!stat[fd])
 			stat[fd] = ft_strdup(buff);
-		else 
+		else
 		{
 			temp = ft_strjoin(stat[fd], buff);
 			free(stat[fd]);
 			stat[fd] = temp;
 		}
 		if (ft_strchr(buff, '\n'))
-			break;
+			break ;
 	}
 	return (ft_retvals(stat, n, line, fd));
 }
