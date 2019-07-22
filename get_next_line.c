@@ -24,15 +24,13 @@ int ft_linemvr(char **line, char **stat)
 	{
 		*line = ft_strsub(*stat, 0, i);
 		temp = ft_strdup(&((*stat)[i + 1]));
-		free (*stat);
+		free(*stat);
 		*stat = temp;
-		if ((*stat)[0] == '\0')
-			ft_strclr(*stat);
 	}
 	else 
 	{
 		*line = ft_strdup(*stat);
-		ft_strclr(*stat);
+		free(*stat);
 	}
 		return(1);
 }
@@ -41,7 +39,7 @@ int	ft_retvals(char **stat, int n, char **line, int fd)
 {
 	if (n < 0 || !line)
 		return (-1);
-	else if (n == 0 && !stat[fd])
+	else if ((n == 0 && !stat[fd]) || (stat[fd][0] == '\0')) 
 	{
 		return(0);
 	}
